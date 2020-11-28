@@ -57,10 +57,10 @@
     <ClCompile Include="SqliteDB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SnippetsDB.cpp">
+    <ClCompile Include="NppOptions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="NppOptions.cpp">
+    <ClCompile Include="SnippetsDB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -114,6 +114,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NppOptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="compiledsnipet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="commands.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stringUtility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

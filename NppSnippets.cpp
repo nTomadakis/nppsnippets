@@ -242,12 +242,19 @@ void MsgBox(const WCHAR* msg)
 void MsgBox(const char* msg)
 {
 	std::wstring wsTmp(msg, msg + strlen(msg));
-	MessageBox(g_nppData._nppHandle, wsTmp.c_str(), PLUGIN_NAME, MB_OK);
+	return MsgBox(wsTmp.c_str());
+	//MessageBox(g_nppData._nppHandle, wsTmp.c_str(), PLUGIN_NAME, MB_OK);
 }
 
 bool MsgBoxYesNo(const WCHAR* msg)
 {
 	return (MessageBox(g_nppData._nppHandle, msg, PLUGIN_NAME, MB_YESNO) == IDYES);
+}
+
+bool MsgBoxYesNo(const char* msg)
+{
+	std::wstring wsTmp(msg, msg + strlen(msg));
+	return MsgBoxYesNo(wsTmp.c_str());
 }
 
 /////////////////////////////////////////////////////////////////////////////

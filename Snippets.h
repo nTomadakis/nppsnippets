@@ -58,8 +58,8 @@ public:
 	void Set(SqliteStatement* stmt) override;
 
 	int GetSnippetID() { return _SnippetID; }
-	WCHAR* WGetBeforeSelection() { return _BeforeSelection; }
-	WCHAR* WGetAfterSelection() { return _AfterSelection; }
+	WCHAR* WGetBeforeSelection() const { return _BeforeSelection; }
+	WCHAR* WGetAfterSelection() const { return _AfterSelection; }
 	char* GetBeforeSelection() { return Unicode2Ansi(_BeforeSelection); }
 	char* GetAfterSelection() { return Unicode2Ansi(_AfterSelection); }
 	bool GetReplaceSelection() { return _ReplaceSelection; }

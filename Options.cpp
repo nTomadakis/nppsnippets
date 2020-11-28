@@ -19,10 +19,9 @@
 //                                                                         //
 /////////////////////////////////////////////////////////////////////////////
 
-#include <windows.h>
+#include "NppSnippets.h"
 #include "Options.h"
 #include "NPP/PluginInterface.h"
-#include "NppSnippets.h"
 #include "version_git.h"
 
 /////////////////////////////////////////////////////////////////////////////

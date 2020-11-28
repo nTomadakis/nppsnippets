@@ -22,12 +22,14 @@
 #pragma once
 
 #include <string>
+#include <Windows.h>
 
 extern HWND getCurrentScintilla();
 extern LRESULT SendMsg(UINT Msg, WPARAM wParam = 0, LPARAM lParam = 0, int count = 1);
 extern void MsgBox(const WCHAR* msg);
 extern void MsgBox(const char* msg);
 extern bool MsgBoxYesNo(const WCHAR* msg);
+extern bool MsgBoxYesNo(const char* msg);
 extern void CenterWindow(HWND hDlg);
 extern std::wstring GetDlgText(HWND hDlg, UINT uID);
 extern int GetDlgTextLength(HWND hDlg, UINT uID);

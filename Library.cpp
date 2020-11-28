@@ -65,7 +65,7 @@ void Library::WSetCreatedBy(LPCWCH txt)
 	if (_CreatedBy != NULL)
 		free(_CreatedBy);
 
-	_CreatedBy = (txt == NULL ? NULL : wcsdup(txt));
+	_CreatedBy = (txt == NULL ? NULL : _wcsdup(txt));
 }
 
 void Library::WSetComments(LPCWCH txt)
@@ -73,7 +73,7 @@ void Library::WSetComments(LPCWCH txt)
 	if (_Comments != NULL)
 		free(_Comments);
 
-	_Comments = (txt == NULL ? NULL : wcsdup(txt));
+	_Comments = (txt == NULL ? NULL :_wcsdup(txt));
 }
 
 /////////////////////////////////////////////////////////////////////////////

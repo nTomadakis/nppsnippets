@@ -19,7 +19,6 @@
 //                                                                         //
 /////////////////////////////////////////////////////////////////////////////
 
-#include <windows.h>
 #include "NPP/PluginInterface.h"
 #include "NppSnippets.h"
 #include "SnippetsDB.h"

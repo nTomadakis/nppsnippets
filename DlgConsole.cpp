@@ -1,5 +1,8 @@
 /////////////////////////////////////////////////////////////////////////////
 //                                                                         //
+//  NppSnippetsPlus - a fork of NppSnippets	a plugin for Notepad++		   //	
+//  Copyright (C) 2020  Nicolas Tomadakis								   //
+//																		   //
 //  NppSnippets - Code Snippets plugin for Notepad++                       //
 //  Copyright (C) 2010-2020 Frank Fesevur                                  //
 //                                                                         //
@@ -41,6 +44,8 @@
 #include "Options.h"
 #include "WaitCursor.h"
 
+#include "compiledsnipet.h"
+
 #ifdef _MSC_VER
 #pragma comment(lib, "shlwapi.lib")
 #endif
@@ -63,6 +68,10 @@ static bool s_bConsoleVisible = false;			// Is the console visible?
 static Library* s_curLibrary = NULL;			// The currently selected lib
 static int s_curLang = -1;						// The "LangType" of the currently selected lib
 static bool s_HasPluginHome = false;			// Does the version of N++ support NPPM_GETPLUGINHOMEPATH
+
+using namespace nppSnipp;
+const CompiledSnippet<wchar_t>::stringT CompiledSnippet<wchar_t>::STARTCMD = L"[[[";
+const CompiledSnippet<wchar_t>::stringT CompiledSnippet<wchar_t>::ENDCMD = L"]]]";
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -600,6 +609,15 @@ static std::string utf8_encode(const std::wstring &wstr)
 }
 
 /////////////////////////////////////////////////////////////////////////////
+// Insert the string into the buffer
+ 
+
+static LRESULT SendText(const WCHAR* txt) {
+	return SendMsg(SCI_REPLACESEL, 0, (LPARAM)utf8_encode(ConvertLineEnding(txt)).c_str());
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
 // Insert the snippet (selected from the context menu item) into the text
 // in the Scintilla window. Double clicking get redirected to here as well.
 
@@ -617,8 +635,18 @@ static void OnSnippetInsert(HWND hWnd)
 	Snippet snip = *pSnip;
 
 	// Do we need to start a new document?
-	if (snip.GetNewDocument())
+	if (snip.GetNewDocument()) {
 		StartNewDocument(snip.GetNewDocumentLang());
+		//SendMessage(g_nppData._nppHandle, NPPM_MENUCOMMAND, 0, IDM_FILE_RENAME);
+		WCHAR* buffer = new WCHAR[_MAX_PATH + 1];
+		SendMessage(g_nppData._nppHandle, NPPM_MENUCOMMAND, 0, IDM_FILE_SAVEAS);
+		/*
+		SendMessage(g_nppData._nppHandle, NPPM_GETFILENAME, _MAX_PATH, (LPARAM) buffer);
+		SendText(buffer);
+		MsgBox(buffer);
+		delete[] buffer;
+		*/
+	}
 
 	// Start an undo action, to make sure this insert is one action to undo
 	SendMsg(SCI_BEGINUNDOACTION);
@@ -634,10 +662,16 @@ static void OnSnippetInsert(HWND hWnd)
 		SendMsg(SCI_GETSELTEXT, 0, (LPARAM) pszText);
 	}
 
-	// Insert the first part of the snippet
-	std::wstring wstr = ConvertLineEnding(snip.WGetBeforeSelection());
-	std::string strTo = utf8_encode(wstr);
-	SendMsg(SCI_REPLACESEL, 0, (LPARAM) strTo.c_str());
+	// checks if advanced commands are used
+	bool gotCmds = CompiledSnippet<wchar_t>::hasVars(snip.WGetBeforeSelection()) || CompiledSnippet<wchar_t>::hasVars(snip.WGetAfterSelection());
+	CompiledSnippet<wchar_t> cs;
+	if (gotCmds) {
+		cs.compile(pSnip);
+		cs.beforeInsert();
+		SendText(cs.insert(eBefore).c_str());
+	}
+	else
+		SendText(snip.WGetBeforeSelection());
 
 	const int beforeSel = (int) SendMsg(SCI_GETCURRENTPOS);
 	const int beforeSelLine = (int) SendMsg(SCI_LINEFROMPOSITION, beforeSel);
@@ -653,15 +687,13 @@ static void OnSnippetInsert(HWND hWnd)
 	const int afterSel = (int) SendMsg(SCI_GETCURRENTPOS);
 
 	// Is there a select part of the snippet to add?
-	if (snip.WGetAfterSelection() != NULL)
-	{
-		const size_t len = wcslen(snip.WGetAfterSelection());
-		if (len > 0)
-		{
-			wstr = ConvertLineEnding(snip.WGetAfterSelection());
-			strTo = utf8_encode(wstr);
-			SendMsg(SCI_REPLACESEL, 0, (LPARAM) strTo.c_str());
+	if ((snip.WGetAfterSelection() != NULL) && (wcslen(snip.WGetAfterSelection()) > 0)) {
+		if (gotCmds) {
+			SendText(cs.insert(eAfter).c_str());
+			cs.afterInsert();
 		}
+		else
+			SendText(snip.WGetAfterSelection());
 	}
 
 	// Get the position and line number after fully inserting the snippet
@@ -680,6 +712,19 @@ static void OnSnippetInsert(HWND hWnd)
 
 	// Put the focus back on the edit window
 	SetFocusOnEditor();
+	//if (snip.GetNewDocument()) {
+
+		//SendMsg(NPPM_MENUCOMMAND, 0, IDM_FILE_SAVEAS);
+
+		//SendMessage(g_nppData._nppHandle, NPPM_MENUCOMMAND, 0, IDM_FILE_SAVEAS);
+		/*if( !SendMessage(g_nppData._nppHandle, NPPM_SAVECURRENTFILEAS, 1,(LPARAM) "D:\\progs\\notepad++\\test.cpp") )
+			ShowAboutDlg();*/
+
+		/*TCHAR name{ "D:\\progs\\notepad++\\test.cpp" };
+		if( !SendMsg(NPPM_SAVECURRENTFILEAS, 1,(LPARAM) &name) )
+			
+		*/
+//	}
 }
 
 /////////////////////////////////////////////////////////////////////////////

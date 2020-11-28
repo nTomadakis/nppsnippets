@@ -19,7 +19,6 @@
 //                                                                         //
 /////////////////////////////////////////////////////////////////////////////
 
-#include <windows.h>
 #include <stdio.h>
 #include <string.h>
 #include "NPP/PluginInterface.h"
@@ -35,7 +34,7 @@ void SnippetBase::WSetName(LPCWCH txt)
 	if (_Name != NULL)
 		free(_Name);
 
-	_Name = (txt == NULL ? NULL : wcsdup(txt));
+	_Name = (txt == NULL ? NULL : _wcsdup(txt));
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -123,7 +122,7 @@ void Snippet::WSetBeforeSelection(LPCWCH txt)
 	if (_BeforeSelection != NULL)
 		free(_BeforeSelection);
 
-	_BeforeSelection = (txt == NULL ? NULL : wcsdup(txt));
+	_BeforeSelection = (txt == NULL ? NULL : _wcsdup(txt));
 }
 
 void Snippet::WSetAfterSelection(LPCWCH txt)
@@ -131,12 +130,12 @@ void Snippet::WSetAfterSelection(LPCWCH txt)
 	if (_AfterSelection != NULL)
 		free(_AfterSelection);
 
-	_AfterSelection = (txt == NULL ? NULL : wcsdup(txt));
+	_AfterSelection = (txt == NULL ? NULL : _wcsdup(txt));
 }
 
 void Snippet::SetBeforeSelection(LPCSTR txt)
 {
-	if (txt == NULL)
+	if(txt == NULL)
 	{
 		WSetBeforeSelection(NULL);
 		return;

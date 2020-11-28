@@ -19,10 +19,9 @@
 //                                                                         //
 /////////////////////////////////////////////////////////////////////////////
 
-#include <windows.h>
+#include "NppSnippets.h"
 #include "NppOptions.h"
 #include "NPP/PluginInterface.h"
-#include "NppSnippets.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // Constructor
