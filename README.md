@@ -1,3 +1,9 @@
+This is a forked version of NppSnippets. The goal is to add commands to the snippets like variables (not in yet !).
+As for now only those commands are in : 
+[[[FILENAME]]]  --> replaced by the name of the current file
+[[[NAMEPART]]]  --> replaced by the name whithout it's extension
+[[[EXTENSION]]] --> replaced by the current's file extension
+
 NppSnippets
 ===========
 
